@@ -1,0 +1,73 @@
+/* index.html */
+
+.loginContainer {
+    position: relative;
+    margin: auto;
+    margin-top: 20vh;
+    width: 30vw;
+    border: 4px solid black;
+    border-radius: 8px;
+}
+
+.loginPanel {
+    margin: 0px;
+}
+
+.form-signin {
+    padding: 10px;
+}
+
+/* client.html */
+
+.dr-box {
+    border: 2px solid black;
+    border-radius: 4px;
+}
+
+.titleRow {
+    height: 10vh;
+}
+
+.infoRow {
+    height: 10vh;
+}
+
+.battleRow {
+    height: 40vh;
+}
+
+.chatRow {
+    height: 40vh;
+}
+
+.alertBox {
+    width: 30vw;
+    position: fixed;
+    z-index: 9999;
+    top: 10vh;
+    left: 35vw;
+    border: 1px solid red;
+    display: none;
+}
+
+.modal-lg {
+    margin: 30px;
+}
+
+.modal-column {
+    top: 80vh;
+}
+
+.createCharacterModal {
+    height: 90vh;
+    width: 95vw;
+}
+
+/* Chat */
+
+#chatInput { padding: 7px; position: fixed; bottom: 0; width: 65%; }
+#chatMessage { border: 0; padding: 2px; width: 90%; margin-right: 5px;  border-radius: 5px; }
+#chatMessages { list-style-type: none; margin: 0; padding: 0; height: 75%; overflow-x: auto; }
+#chatMessages li { padding: 5px 10px; }
+
+#chat { padding: 0px; }
