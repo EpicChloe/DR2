@@ -42,6 +42,14 @@ io.on('connection', function (socket) {
 
     socket.on('disconnect', function(){
         console.log('Socket Disconnected');
+        if (socket.characterName == null) {
+
+        } else {
+            var index = app.onlineCharacters.indexOf(socket.characterName);
+            if (index > -1) {
+                app.onlineCharacters.splice(index, 1);
+            }
+        }
     });
 
     socket.on('loginAttempt', function(data){
@@ -93,7 +101,84 @@ io.on('connection', function (socket) {
     });
 
     socket.on('fetchData', function(UUID) {
-        socket.emit('createCharacter');
+        var id = '';
+        db.get('SELECT * FROM users WHERE accessToken = ?', UUID, function (err, row) {
+            if (row == null) {
+                socket.emit('invalidAccessToken');
+            } else {
+                id = row['ID'];
+                db.get('SELECT * FROM characters WHERE accountOwner = ?', id, function (err, row) {
+                    if (row == null) {
+                        socket.emit('createCharacter');
+                    } else {
+                        socket.emit('pushCharacterData', row);
+                        app.onlineCharacters.push(row.name);
+                        io.emit('updateChatList', app.onlineCharacters);
+                        socket.characterName = row.name;
+                    }
+                });
+            }
+        });
+    });
+
+    socket.on('creatingCharacter', function(data) {
+        db.get('SELECT * FROM users WHERE accessToken = ?', data.UUID, function (err, row) {
+            if (row == null) {
+                socket.emit('invalidAccessToken');
+            } else {
+                data.id = row['ID'];
+                console.log('Attempting to create Character for Account: '+row['ID']);
+                db.get('SELECT * FROM characters WHERE name = ?', data.name, function (err, row) {
+                    if (row == null) {
+                        data.inventory = JSON.stringify({gold: 0, backpack: {size: 4, items: []}});
+                        data.equipment = JSON.stringify({
+                            weapon: [0, 0, 0, 0, 0, 0, 0, 0],
+                            weaponMod: 0,
+                            helm: [0, 0, 0, 0, 0, 0, 0, 0],
+                            chest: [0, 0, 0, 0, 0, 0, 0, 0],
+                            pants: [0, 0, 0, 0, 0, 0, 0, 0],
+                            boots: [0, 0, 0, 0, 0, 0, 0, 0],
+                            ring1: [0, 0, 0, 0, 0, 0, 0, 0],
+                            ring2: [0, 0, 0, 0, 0, 0, 0, 0],
+                            amulet: [0, 0, 0, 0, 0, 0, 0, 0]
+                        });
+                        data.talents = JSON.stringify([0, 0, 0, 0, 0]);
+                        switch (data.class) {
+                            case 'brawler':
+                                data.skills = JSON.stringify(['TestSpell_1', 'TestSpell_2', 'TestSpell_3', 'TestSpell_4', 'TestPassive']);
+                                break;
+                            case 'paladin':
+                                data.skills = JSON.stringify(['TestSpell_1', 'TestSpell_2', 'TestSpell_3', 'TestSpell_4', 'TestPassive']);
+                                break;
+                            case 'fireMage':
+                                data.skills = JSON.stringify(['TestSpell_1', 'TestSpell_2', 'TestSpell_3', 'TestSpell_4', 'TestPassive']);
+                                break;
+                            case 'archer':
+                                data.skills = JSON.stringify(['TestSpell_1', 'TestSpell_2', 'TestSpell_3', 'TestSpell_4', 'TestPassive']);
+                                break;
+                        }
+                        console.log('Data for new Character: '+data.characterName);
+                        console.log(data);
+                        db.run('INSERT INTO characters (name, class, inventory, equipment, talents, skills, accountOwner) VALUES ($name, $class, $inventory, $equipment, $talents, $skills, $accountOwner)',
+                            {
+                                $name: data.characterName,
+                                $class: data.class,
+                                $inventory: data.inventory,
+                                $equipment: data.equipment,
+                                $talents: data.talents,
+                                $skills: data.skills,
+                                $accountOwner: data.id
+                            },
+                            function () {
+                                socket.emit('characterCreationSuccess');
+                                console.log('Character Created!');
+                            });
+                    } else {
+                        socket.emit('characterNameTaken');
+                    }
+                });
+            }
+        });
     });
 
     socket.on('chat message', function(msg){

@@ -53,7 +53,8 @@
                     </form>
                 </div>
                 <div class="col-md-4 dr-box chatRow" id="charactersOnline">
-                    Charaters Online
+                    <div class="text-center">Online Characters</div>
+                    <div id="onlineCharacterList"></div>
                 </div>
             </div>
         </div>
@@ -71,66 +72,36 @@
                     <div class="modal-body">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="col-md-4 control-label" for="characterName">Character Name</label>
-                                <div class="col-md-8">
-                                    <input id="characterName" name="characterName" type="text" placeholder="Character Name" class="form-control input-md" required="">
+                                <label class="col-md-4 control-label" for="CCcharacterName">Character Name</label>
+                                <div class="col-md-5">
+                                    <input id="CCcharacterName" name="CCcharacterName" type="text" placeholder="Character Name" class="form-control input-md">
 
                                 </div>
                             </div>
 
-                            <!-- Multiple Radios -->
+                            <!-- Select Basic -->
                             <div class="form-group">
-                                <label class="col-md-4 control-label" for="Race">Race</label>
-                                <div class="col-md-4">
-                                    <div class="radio">
-                                        <label for="Race-0">
-                                            <input type="radio" name="Race" id="Race-0" value="human" checked="checked">
-                                            Human
-                                        </label>
-                                    </div>
-                                    <div class="radio">
-                                        <label for="Race-1">
-                                            <input type="radio" name="Race" id="Race-1" value="elf">
-                                            Elf
-                                        </label>
-                                    </div>
-                                    <div class="radio">
-                                        <label for="Race-2">
-                                            <input type="radio" name="Race" id="Race-2" value="halfling">
-                                            Halfling
-                                        </label>
-                                    </div>
+                                <label class="col-md-4 control-label" for="CCrace">Race</label>
+                                <div class="col-md-5">
+                                    <select id="CCrace" name="CCrace" class="form-control">
+                                        <option value="human">Human</option>
+                                        <option value="elf">Elf</option>
+                                        <option value="halfling">Halfling</option>
+                                        <option value="dwarf">Dwarf</option>
+                                    </select>
                                 </div>
                             </div>
 
-                            <!-- Multiple Radios -->
+                            <!-- Select Basic -->
                             <div class="form-group">
-                                <label class="col-md-4 control-label" for="class">Class</label>
-                                <div class="col-md-4">
-                                    <div class="radio">
-                                        <label for="class-0">
-                                            <input type="radio" name="class" id="class-0" value="brawler" checked="checked">
-                                            Brawler
-                                        </label>
-                                    </div>
-                                    <div class="radio">
-                                        <label for="class-1">
-                                            <input type="radio" name="class" id="class-1" value="paladin">
-                                            Paladin
-                                        </label>
-                                    </div>
-                                    <div class="radio">
-                                        <label for="class-2">
-                                            <input type="radio" name="class" id="class-2" value="fireMage">
-                                            Fire Mage
-                                        </label>
-                                    </div>
-                                    <div class="radio">
-                                        <label for="class-3">
-                                            <input type="radio" name="class" id="class-3" value="archer">
-                                            Archer
-                                        </label>
-                                    </div>
+                                <label class="col-md-4 control-label" for="CCclass">Class</label>
+                                <div class="col-md-5">
+                                    <select id="CCclass" name="CCclass" class="form-control">
+                                        <option value="brawler">Brawler</option>
+                                        <option value="paladin">Paladin</option>
+                                        <option value="fireMage">Fire Mage</option>
+                                        <option value="archer">Archer</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -139,13 +110,13 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" id="createCharacter">Save changes</button>
+                        <button type="button" class="btn btn-primary" id="createCharacter">Create Character</button>
                     </div>
                 </div>
             </div>
         </div>
-
+        <div class="alert alert-danger alertBox">
+        </div>
         <!-- Scripts -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>

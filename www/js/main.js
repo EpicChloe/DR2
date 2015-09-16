@@ -15,13 +15,13 @@
 
     socket.on('loginFailed', function(){
         console.log('Login Failed');
-        $('.alertBox').text('Login Failed. Please check your email or password.')
+        $('.alertBox').text('Login Failed. Please check your email or password.');
         $('.alertBox').show();
     });
 
     socket.on('registrationFail', function(){
         console.log('Login Failed');
-        $('.alertBox').text('Registration Failed. That Email address is already in use.')
+        $('.alertBox').text('Registration Failed. That Email address is already in use.');
         $('.alertBox').show();
     });
 
