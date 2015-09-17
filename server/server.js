@@ -7,6 +7,7 @@ var app = express();
 var colors = require('colors');
 var moment = require('moment');
 var bcrypt = require('bcrypt-node');
+var sanitizeHtml = require('sanitize-html');
 
 var sqlite3 = require("sqlite3").verbose();
 var db = new sqlite3.Database('research/db/main.db');
@@ -49,6 +50,7 @@ io.on('connection', function (socket) {
             if (index > -1) {
                 app.onlineCharacters.splice(index, 1);
             }
+            io.emit('updateChatList', app.onlineCharacters);
         }
     });
 
@@ -82,19 +84,23 @@ io.on('connection', function (socket) {
         } else {
             console.log('Authorizing Account: ' + email);
             db.get('SELECT * FROM users WHERE email = ?', email, function (err, row) {
-                    id = row['ID'];
-                    passHash = row['password'];
-                    bcrypt.compare(pass, passHash, function (err, res) {
-                        if (res) {
-                            db.run('UPDATE users SET accessToken = $token WHERE ID = $id',
-                                {$id: id, $token: accessToken}, function () {
-                                    socket.emit('loginSuccess', accessToken);
-                                }
-                            );
-                        } else {
-                            socket.emit('loginFailed');
-                        }
-                    });
+                    if (row == null) {
+                        socket.emit('loginFailed');
+                    } else {
+                        id = row['ID'];
+                        passHash = row['password'];
+                        bcrypt.compare(pass, passHash, function (err, res) {
+                            if (res) {
+                                db.run('UPDATE users SET accessToken = $token WHERE ID = $id',
+                                    {$id: id, $token: accessToken}, function () {
+                                        socket.emit('loginSuccess', accessToken);
+                                    }
+                                );
+                            } else {
+                                socket.emit('loginFailed');
+                            }
+                        });
+                    }
                 }
             );
         }
@@ -159,7 +165,7 @@ io.on('connection', function (socket) {
                         }
                         console.log('Data for new Character: '+data.characterName);
                         console.log(data);
-                        db.run('INSERT INTO characters (name, class, inventory, equipment, talents, skills, accountOwner) VALUES ($name, $class, $inventory, $equipment, $talents, $skills, $accountOwner)',
+                        db.run('INSERT INTO characters (name, class, inventory, equipment, talents, skills, accountOwner, level) VALUES ($name, $class, $inventory, $equipment, $talents, $skills, $accountOwner, $level)',
                             {
                                 $name: data.characterName,
                                 $class: data.class,
@@ -167,7 +173,8 @@ io.on('connection', function (socket) {
                                 $equipment: data.equipment,
                                 $talents: data.talents,
                                 $skills: data.skills,
-                                $accountOwner: data.id
+                                $accountOwner: data.id,
+                                $level: 1
                             },
                             function () {
                                 socket.emit('characterCreationSuccess');
@@ -181,8 +188,9 @@ io.on('connection', function (socket) {
         });
     });
 
-    socket.on('chat message', function(msg){
-        console.log('message: ' + msg);
+    socket.on('chat message', function(msgData){
+        console.log('Chat Message=> From: ' + msgData[2] + ' Message:' + msgData[0]);
+        var msg = '<' + msgData[2] + '> ' + sanitizeHtml(msgData[0]);
         io.emit('chat message', msg);
     });
 

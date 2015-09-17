@@ -18,7 +18,12 @@
 
     socket.on('pushCharacterData', function(data) {
         characterData = data;
+        characterData.inventory = JSON.parse(characterData.inventory);
+        characterData.equipment = JSON.parse(characterData.equipment);
+        characterData.skills = JSON.parse(characterData.skills);
+        characterData.talents = JSON.parse(characterData.talents);
         console.log(characterData);
+        updateCharacterInformation();
     });
 
     socket.on('characterNameTaken', function() {
@@ -46,7 +51,7 @@
     /* Chat */
 
     $('#chatInput').submit(function(){
-        socket.emit('chat message', $('#chatMessage').val());
+        socket.emit('chat message', [$('#chatMessage').val(), characterData.class, characterData.name]);
         $('#chatMessage').val('');
         return false;
     });
@@ -60,5 +65,28 @@
     socket.on('updateChatList', function(data) {
         $('#onlineCharacterList').html(data.join('<br>'));
     });
+
+    /* Display */
+
+    function updateCharacterInformation() {
+        $('#infoCharacterName').html(characterData.name);
+        $('#infoCharacterLevel').html(characterData.level);
+        $('#infoCharacterClass').html(parseClass(characterData.class));
+        $('#infoCharacterGold').html(characterData.inventory.gold);
+        $('#classIcon').attr("src", "img/icons/class/"+characterData.class+'.png');
+    }
+
+    function parseClass(cls) {
+        switch (cls) {
+            case 'brawler':
+                return 'Brawler';
+            case 'paladin':
+                return 'Paladin';
+            case 'fireMage':
+                return 'Fire Mage';
+            case 'archer':
+                return 'Archer';
+        }
+    }
 
 })();

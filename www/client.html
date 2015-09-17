@@ -25,9 +25,9 @@
             </div>
             <div class="row">
                 <div class="col-md-4 dr-box infoRow" id="charStats">
-                    {{character.name}} - {{character.level}} <br>
-                    <em>{{character.class}}</em> Gold: {{character.inventory.gold}}
-                    <img src="{{icon}}" class="pull-right"></img>
+                    <span id="infoCharacterName">{{character.name}}</span> - Level: <span id="infoCharacterLevel">{{character.level}}</span> <br>
+                    <em><span id="infoCharacterClass">{{character.class}}</span></em> Gold: <span id="infoCharacterGold">{{character.inventory.gold}}</span>
+                    <img src="{{icon}}" class="pull-right" id="classIcon"></img>
                 </div>
                 <div class="col-md-4 dr-box infoRow" id="news">
                     <strong>News:</strong> OMG Someone got something cool that you did not. HAHA.
