@@ -74,6 +74,66 @@
         $('#infoCharacterClass').html(parseClass(characterData.class));
         $('#infoCharacterGold').html(characterData.inventory.gold);
         $('#classIcon').attr("src", "img/icons/class/"+characterData.class+'.png');
+        $('#abilityButton1').children().attr('src', parseAbilityToImage(characterData.skills[0]));
+        $('#abilityButton1').data('data-tooltip', parseAbilityTooltip(characterData.skills[0], characterData.talents[0]));
+        $('#abilityButton1').data('data-spellname', parseAbilityToName(characterData.skills[0]));
+        $('#abilityButton2').children().attr('src', parseAbilityToImage(characterData.skills[1]));
+        $('#abilityButton2').data('data-tooltip', parseAbilityTooltip(characterData.skills[1], characterData.talents[1]));
+        $('#abilityButton2').data('data-spellname', parseAbilityToName(characterData.skills[1]));
+        $('#abilityButton3').children().attr('src', parseAbilityToImage(characterData.skills[2]));
+        $('#abilityButton3').data('data-tooltip', parseAbilityTooltip(characterData.skills[2], characterData.talents[2]));
+        $('#abilityButton3').data('data-spellname', parseAbilityToName(characterData.skills[2]));
+        $('#abilityButton4').children().attr('src', parseAbilityToImage(characterData.skills[3]));
+        $('#abilityButton4').data('data-tooltip', parseAbilityTooltip(characterData.skills[3], characterData.talents[3]));
+        $('#abilityButton4').data('data-spellname', parseAbilityToName(characterData.skills[3]));
+        $('#passiveAbility').children().attr('src', parseAbilityToImage(characterData.skills[4]));
+        $('#passiveAbility').data('data-tooltip', parseAbilityTooltip(characterData.skills[4], characterData.talents[4]));
+        $('#passiveAbility').data('data-spellname', parseAbilityToName(characterData.skills[4]));
+    }
+
+    function parseAbilityToImage(ability) {
+        switch (ability) {
+            case 'TestSpell_1':
+                return 'img/icons/ability/TestSpell_1.png';
+            case 'TestSpell_2':
+                return 'img/icons/ability/TestSpell_1.png';
+            case 'TestSpell_3':
+                return 'img/icons/ability/TestSpell_1.png';
+            case 'TestSpell_4':
+                return 'img/icons/ability/TestSpell_1.png';
+            case 'TestPassive':
+                return 'img/icons/ability/TestSpell_1.png';
+        }
+    }
+
+    function parseAbilityTooltip(ability, talentPoints) {
+        switch (ability) {
+            case 'TestSpell_1':
+                return dr2.helper.tooltips['TestSpell_1'].format(1*talentPoints);
+            case 'TestSpell_2':
+                return dr2.helper.tooltips['TestSpell_2'].format(1*talentPoints);
+            case 'TestSpell_3':
+                return dr2.helper.tooltips['TestSpell_3'].format(1*talentPoints);
+            case 'TestSpell_4':
+                return dr2.helper.tooltips['TestSpell_4'].format(1*talentPoints);
+            case 'TestPassive':
+                return dr2.helper.tooltips['TestPassive'].format(1*talentPoints);
+        }
+    }
+
+    function parseAbilityToName(ability) {
+        switch (ability) {
+            case 'TestSpell_1':
+                return 'Test Spell 1';
+            case 'TestSpell_2':
+                return 'Test Spell 2';
+            case 'TestSpell_3':
+                return 'Test Spell 3';
+            case 'TestSpell_4':
+                return 'Test Spell 4';
+            case 'TestPassive':
+                return 'Test Passive';
+        }
     }
 
     function parseClass(cls) {
@@ -89,4 +149,48 @@
         }
     }
 
+    dr2 = {};
+    dr2.helper = {};
+    dr2.helper.tooltips = {
+        'TestSpell_1': 'This is a Test Spell. It does {0} damage. Moo.',
+        'TestSpell_2': 'This is a Test Spell. It does {0} damage. Moo.',
+        'TestSpell_3': 'This is a Test Spell. It does {0} damage. Moo.',
+        'TestSpell_4': 'This is a Test Spell. It does {0} damage. Moo.',
+        'TestPassive': 'This is a Test Passive. I care about {0} percent.'
+    };
+
+    $('[id^=abilityButton]').on('mouseenter', function(event) {
+        if (event.target.id == null || event.target.id == '') {
+
+        } else {
+            console.log(event.target.id);
+            console.log($('#' + event.target.id).data('data-tooltip'));
+            $('#tooltipData').html('<strong>' + $('#' + event.target.id).data('data-spellname') + ':</strong> ' + $('#' + event.target.id).data('data-tooltip'));
+        }
+    });
+
+    $('#passiveAbility').on('mouseenter', function(event) {
+        if (event.target.id == null || event.target.id == '') {
+
+        } else {
+            console.log(event.target.id);
+            console.log($('#' + event.target.id).data('data-tooltip'));
+            $('#tooltipData').html('<strong>' + $('#' + event.target.id).data('data-spellname') + ':</strong> ' + $('#' + event.target.id).data('data-tooltip'));
+        }
+    });
+
+
+    /* Shims */
+
+    if (!String.prototype.format) {
+        String.prototype.format = function() {
+            var args = arguments;
+            return this.replace(/{(\d+)}/g, function(match, number) {
+                return typeof args[number] != 'undefined'
+                    ? args[number]
+                    : match
+                    ;
+            });
+        };
+    }
 })();
